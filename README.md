@@ -5,7 +5,7 @@ Replace the title with your project title, and **add a snappy acronym that peopl
 # Members
 
 Armaan Singh Chahal; 301559489
-Ekamleen Maan ; 301555970
+Ekamleen Maan; 301555970
 Md Rownak Abtahee Diganta; 301539632
 Add a 1-2 line summary of your project here.
 
