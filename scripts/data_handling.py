@@ -75,3 +75,27 @@ len(image_files)
 image_files = sorted(glob.glob(os.path.join(train_images_path, "*.jpg")))
 mask_files = sorted(glob.glob(os.path.join(train_masks_path, "*.png")))  # Assuming all masks are .png
 
+# Ensure counts match before renaming
+if len(image_files) != len(mask_files):
+    print("Error: Number of images and masks do not match!")
+else:
+    print(f"Renaming {len(image_files)} images and masks...")
+    # Took help from chatgpt
+    for i, (image_path, mask_path) in enumerate(zip(image_files, mask_files), start=1):
+        new_image_name = f"{i:06d}.jpg"  # 000001.jpg, 000002.jpg, ...
+        new_mask_name = f"{i:06d}_seg.png"  # 000001_seg.png, 000002_seg.png, ...
+
+        # Creating full new paths
+        new_image_path = os.path.join(train_images_path, new_image_name)
+        new_mask_path = os.path.join(train_masks_path, new_mask_name)
+
+        # Renaming files
+        os.rename(image_path, new_image_path)
+        os.rename(mask_path, new_mask_path)
+
+        # Printing rename confirmation for first few samples
+        if i <= 5:
+            print(f"Renamed: {os.path.basename(image_path)} → {new_image_name}")
+            print(f"Renamed: {os.path.basename(mask_path)} → {new_mask_name}")
+    # To ensure that the renaming was successfully executed
+    print("Renaming completed successfully!")
