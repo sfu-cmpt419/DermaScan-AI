@@ -374,12 +374,12 @@ body {
   }
   
   .image-wrapper img {
-    max-width: 300px;
+    width: 300px;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
   }
 
-#previewImage {
+/* #previewImage {
     position: absolute;
     max-width: 100%;
     max-height: 100%;
@@ -387,7 +387,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     transition: transform 0.3s ease;
-}
+} */
 
 #overlayCanvas {
     position: absolute;
