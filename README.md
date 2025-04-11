@@ -93,13 +93,51 @@ This project has been tested on CSIL Workstation (for frontend and backend) and 
 - boto3
 - optuna
 
-3. [Reproducing this project](#repro)
-- Git installed on your system.
-- Python 3.12 installed.
-- Model File : [link]
-- After downloading, place the file in the Web/ folder of the project before running the app.
+<a name="repro"></a>
 
-4. [Guidance](#guide)
+## 3. Reproduction
+
+To reproduce and run the web application:
+
+### ✅ Clone the repository
+
+```bash
+git clone https://github.com/sfu-cmpt419/2025_1_project_15.git
+cd 2025_1_project_15
+```
+
+### 📥 Download the model file
+
+Download the trained `.pth` model file from this link and save it inside the `2025_1_project_15` directory:
+
+```
+https://drive.usercontent.google.com/download?id=1-4l8_UcjSggkAcm0-zpMyb2IjkJuw-Rq&export=download
+```
+
+### 🐍 Create a virtual environment
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 📦 Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### ▶️ Run the Flask application
+
+```bash
+python3 app.py
+```
+
+Then open your browser and go to:
+
+```
+http://127.0.0.1:5000
+```
 
 <a name="demo"></a>
 
@@ -140,24 +178,6 @@ cd $THISREPO
 conda env create -f requirements.yml
 conda activate amazing
 ```
-
-<a name="repro"></a>
-
-## 3. Reproduction
-
-Demonstrate how your work can be reproduced, e.g. the results in your report.
-S3 Data -> 
-
-```bash
-mkdir tmp && cd tmp
-wget https://yourstorageisourbusiness.com/dataset.zip
-unzip dataset.zip
-conda activate amazing
-python evaluate.py --epochs=10 --data=/in/put/dir
-```
-
-Data can be found at ...
-Output will be saved in ...
 
 <a name="guide"></a>
 
