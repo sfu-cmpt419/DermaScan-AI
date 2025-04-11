@@ -147,3 +147,129 @@ class CombinedLoss(nn.Module):
 
     def forward(self, preds, targets):
         return self.alpha * self.bce(preds, targets) + (1 - self.alpha) * self.dice(preds, targets)
+
+
+# Objective function
+def objective(trial):
+    print(f"[INFO] Starting trial {trial.number}")
+    # Hyperparameters tuning
+    lr = trial.suggest_float('lr', 1e-5, 5e-4, log=True)
+    alpha = trial.suggest_float('alpha', 0.3, 0.9)
+    batch_size = trial.suggest_categorical('batch_size', [4, 8, 16])
+    optimizer_name = trial.suggest_categorical('optimizer', ['Adam', 'SGD', 'AdamW'])
+    scheduler_name = trial.suggest_categorical('scheduler', ['ReduceLROnPlateau', 'OneCycleLR'])
+    loss_type = trial.suggest_categorical('loss', ['CombinedLoss'])
+    flip_p = trial.suggest_float('flip_p', 0.3, 0.8)
+    rotate_p = trial.suggest_float('rotate_p', 0.3, 0.8)
+    num_epochs = 5
+
+    # Initializing all the paths
+    train_image_dir = "/home/ubuntu/Data/Train/train-image"
+    train_mask_dir = "/home/ubuntu/Data/Train/train-mask"
+    val_image_dir = "/home/ubuntu/Data/Validation/Validation-Images"
+    val_mask_dir = "/home/ubuntu/Data/Validation/Validation-Masks"
+
+    # Transforming the image data for training purposes
+    transform = A.Compose([
+        A.Resize(512, 512, interpolation=cv2.INTER_NEAREST),
+        A.HorizontalFlip(p=flip_p),
+        A.Rotate(limit=20, p=rotate_p),
+        A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+        ToTensorV2()
+    ], additional_targets={'mask': 'mask'})
+
+    # Setting up all the datasets and dataloaders
+    train_dataset = SkinLesionDataset(train_image_dir, train_mask_dir, transform=transform)
+    val_dataset = SkinLesionDataset(val_image_dir, val_mask_dir, transform=transform)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2, pin_memory=True)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=2, pin_memory=True)
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"[INFO] Using device: {device}")
+    model = UNet().to(device)
+    scaler = GradScaler()
+
+    # Took suggestions from chatgpt
+    # Selcting optimizers and loss
+    criterion = CombinedLoss(alpha=alpha)
+    if optimizer_name == 'Adam':
+        optimizer = optim.Adam(model.parameters(), lr=lr)
+    elif optimizer_name == 'SGD':
+        optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+    else:
+        optimizer = optim.AdamW(model.parameters(), lr=lr)
+
+    # Selecting learning rate scheduler
+    if scheduler_name == 'OneCycleLR':
+        scheduler = OneCycleLR(optimizer, max_lr=lr, steps_per_epoch=len(train_loader), epochs=num_epochs)
+    else:
+        scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=3)
+
+    s3 = boto3.client('s3')
+    best_val_loss = float('inf')
+    no_improve = 0
+    patience = 3
+
+    for epoch in range(num_epochs):
+        print(f"[TRAIN] Epoch {epoch + 1}/{num_epochs}")
+        model.train()
+        for images, masks in train_loader:
+            images, masks = images.to(device), masks.to(device)
+            if masks.ndim == 3:
+                masks = masks.unsqueeze(1)
+            optimizer.zero_grad()
+            with autocast(device_type='cuda'):
+                outputs = model(images)
+                loss = criterion(outputs, masks)
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
+
+        # loop for evaluating
+        model.eval()
+        val_loss, acc = 0.0, 0.0
+        with torch.no_grad():
+            for images, masks in val_loader:
+                images, masks = images.to(device), masks.to(device)
+                outputs = model(images)
+                loss = criterion(outputs, masks)
+                val_loss += loss.item()
+                acc += compute_accuracy(outputs, masks)
+
+        avg_val_loss = val_loss / len(val_loader)
+        avg_val_acc = acc / len(val_loader)
+        print(f"[VAL] Epoch {epoch + 1} - Val Loss: {avg_val_loss:.4f}, Accuracy: {avg_val_acc:.4f}")
+
+        # Updating scheduler
+        if scheduler_name == 'ReduceLROnPlateau':
+            scheduler.step(avg_val_loss)
+        else:
+            scheduler.step()
+        # Saving the best model and uploading to AWS S3
+        if avg_val_loss < best_val_loss:
+            print("[INFO] New best model found. Saving and uploading to S3...")
+            best_val_loss = avg_val_loss
+            no_improve = 0
+            torch.save(model.state_dict(), "/home/ubuntu/best_model.pth")
+            s3.upload_file("/home/ubuntu/best_model.pth", "cmpt419-1", "models/best_model_optuna.pth")
+        else:
+            no_improve += 1
+            print(f"[INFO] No improvement. Patience: {no_improve}/{patience}")
+            if no_improve >= patience:
+                print(f"[INFO] Early stopping at epoch {epoch + 1}")
+                break
+
+    print(f"[RESULT] Trial {trial.number} complete. Best Val Loss: {best_val_loss:.4f}")
+    return best_val_loss
+
+# Running Optuna study
+if __name__ == "__main__":
+    print("[INFO] Starting Optuna study...")
+    study = optuna.create_study(direction='minimize')
+    study.optimize(objective, n_trials=10)
+
+    print("Best trial:")
+    print(f"  Loss: {study.best_trial.value:.4f}")
+    print("  Params:")
+    for key, value in study.best_trial.params.items():
+        print(f"    {key}: {value}")
