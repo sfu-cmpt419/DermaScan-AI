@@ -4,16 +4,17 @@ Replace the title with your project title, and **add a snappy acronym that peopl
 
 # Members
 
-Armaan Singh Chahal; 301559489
-Ekamleen Maan; 301555970
-Md Rownak Abtahee Diganta; 301539632
-Harry Gabbi; 301575215
-Henrik Sachdeva; 301563572
-Add a 1-2 line summary of your project here.
+- Armaan Singh Chahal; 301559489
+- Ekamleen Maan; 301555970
+- Md Rownak Abtahee Diganta; 301539632
+- Harry Gabbi; 301575215
+- Henrik Sachdeva; 301563572
+
+
 
 ## Important Links
 
-| [Timesheet](https://google.com) | [Slack channel](https://google.com) | [Project report](https://google.com) |
+| [Timesheet](https://1sfu-my.sharepoint.com/:x:/g/personal/hamarneh_sfu_ca/EQtkw0aRKKxLv6Z9HjbeheMBTgQUvSGsXA66OyNGmjm8ZQ?e=aCWdmb) | [Slack channel](https://app.slack.com/client/T0866LNE29J/C086CRN5210) | [Project report](https://www.overleaf.com/project/676b837f0be019e9fe90e430) |
 |-----------|---------------|-------------------------|
 
 
