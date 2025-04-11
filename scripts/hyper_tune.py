@@ -152,7 +152,7 @@ class CombinedLoss(nn.Module):
 # Objective function
 def objective(trial):
     print(f"[INFO] Starting trial {trial.number}")
-    # Hyperparameters tuning
+    # Hyperparameters tuning: Took assistance from chatgpt to decide the hyperparameter options
     lr = trial.suggest_float('lr', 1e-5, 5e-4, log=True)
     alpha = trial.suggest_float('alpha', 0.3, 0.9)
     batch_size = trial.suggest_categorical('batch_size', [4, 8, 16])
