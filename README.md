@@ -28,7 +28,6 @@ Replace the title with your project title, and **add a snappy acronym that peopl
 Watch a quick overview of how DSAI works:  
 🔗 [**Watch on YouTube**](https://www.youtube.com/watch?v=fgDxsfhXXvQ)
 
-
 ## Table of Contents
 
 1. [Demo](#demo)
@@ -147,6 +146,7 @@ conda activate amazing
 ## 3. Reproduction
 
 Demonstrate how your work can be reproduced, e.g. the results in your report.
+S3 Data -> 
 
 ```bash
 mkdir tmp && cd tmp
