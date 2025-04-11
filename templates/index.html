@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DermaScan AI | Advanced Skin Lesion Analysis</title>
+    <link rel="stylesheet" href="../static/Style/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <div class="background-blur"></div>
+    
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12,2L4,12L12,22L20,12L12,2M12,4L18,12L12,20L6,12L12,4Z" />
+                        </svg>
+                    </div>
+                    <h1>DermaScan <span>AI</span></h1>
+                </div>
+                <p class="tagline">Advanced Dermatoscopic Analysis using ABCD Rule</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="upload-section animate__animated animate__fadeIn">
+                <div class="upload-card glass-card">
+                    <div class="upload-visual">
+                        <div class="visual-circle">
+                            <div class="inner-circle">
+                                <svg class="upload-icon" viewBox="0 0 24 24">
+                                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z M8,15V13H16V15H8M8,11V9H13V11H8M8,19V17H16V19H8Z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="upload-interface">
+                        <div class="upload-box" id="dropZone">
+                            <p class="upload-instruction">Drag & drop dermatoscopic image here</p>
+                            <p class="or-text">or</p>
+                            <button class="btn-primary pulse-animation" id="uploadBtn">
+                                <span>Browse Files</span>
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" />
+                                </svg>
+                            </button>
+                            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="upload-details">
+                            <div class="detail-item">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                                </svg>
+                                <p>Supports JPG, PNG, DICOM</p>
+                            </div>
+                            <div class="detail-item">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,7V9H13V7H11M11,11V17H13V11H11Z" />
+                                </svg>
+                                <p>Include scale reference for best results</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-section" id="analysisSection" style="display: none;">
+                <div class="analysis-container">
+                    <div class="image-analysis glass-card">
+                        <div class="section-header">
+                            <h2>Lesion Visualization</h2>
+                            <div class="image-controls">
+                                <button class="btn-icon" id="zoomInBtn" title="Zoom In">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M15.5,14L20.5,19L19,20.5L14,15.5V14.71L13.73,14.43C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.43,13.73L14.71,14H15.5M9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14M12,10H10V12H9V10H7V9H9V7H10V9H12V10Z" />
+                                    </svg>
+                                </button>
+                                <button class="btn-icon" id="zoomOutBtn" title="Zoom Out">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M15.5,14H14.71L14.43,13.73C15.41,12.59 16,11.11 16,9.5A6.5,6.5 0 0,0 9.5,3A6.5,6.5 0 0,0 3,9.5A6.5,6.5 0 0,0 9.5,16C11.11,16 12.59,15.41 13.73,14.43L14,14.71V15.5L19,20.5L20.5,19L15.5,14M9.5,14C7,14 5,12 5,9.5C5,7 7,5 9.5,5C12,5 14,7 14,9.5C14,12 12,14 9.5,14M7,9H12V10H7V9Z" />
+                                    </svg>
+                                </button>
+                                <button class="btn-icon" id="resetZoomBtn" title="Reset Zoom">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M12,5C15.87,5 19,8.13 19,12C19,15.87 15.87,19 12,19C8.13,19 5,15.87 5,12C5,8.13 8.13,5 12,5M12,7C9.24,7 7,9.24 7,12C7,14.76 9.24,17 12,17C14.76,17 17,14.76 17,12C17,9.24 14.76,7 12,7M13,12C13,12.55 12.55,13 12,13C11.45,13 11,12.55 11,12C11,11.45 11.45,11 12,11C12.55,11 13,11.45 13,12Z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="image-display-container">
+                            <div class="image-wrapper">
+                              <img id="originalImage" src="" alt="Original Image">
+                              <img id="previewImage" src="" alt="Segmented Lesion">
+                              <canvas id="overlayCanvas"></canvas>
+                            </div>
+                          </div>
+                        <div class="visualization-options">
+                            <div class="option-group">
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="results-analysis">
+                        <div class="abcd-scores glass-card">
+                            <div class="section-header">
+                                <h2>ABCD Analysis</h2>
+                                <button class="btn-info" id="abcdInfoBtn">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="score-grid">
+                                <div class="score-card" id="asymmetryCard">
+                                    <div class="score-header">
+                                        <h3>Asymmetry</h3>
+                                        <div class="score-value" id="asymmetryScore">-</div>
+                                    </div>
+                                    <div class="score-visual">
+                                        <div class="visual-circle">
+                                            <div class="axis horizontal"></div>
+                                            <div class="axis vertical"></div>
+                                        </div>
+                                    </div>
+                                    <div class="score-details">
+                                        <p>Score: <span>0-2</span></p>
+                                        <p>Weight: <span>×1.3</span></p>
+                                    </div>
+                                </div>
+                                <div class="score-card" id="borderCard">
+                                    <div class="score-header">
+                                        <h3>Border</h3>
+                                        <div class="score-value" id="borderScore">-</div>
+                                    </div>
+                                    <div class="score-visual">
+                                        <div class="border-visual">
+                                            <div class="border-segment" v-for="i in 8"></div>
+                                        </div>
+                                    </div>
+                                    <div class="score-details">
+                                        <p>Segments: <span>0-8</span></p>
+                                        <p>Weight: <span>×0.1</span></p>
+                                    </div>
+                                </div>
+                                <div class="score-card" id="colorCard">
+                                    <div class="score-header">
+                                        <h3>Color</h3>
+                                        <div class="score-value" id="colorScore">-</div>
+                                    </div>
+                                    <div class="score-visual">
+                                        <div class="color-palette">
+                                            <div class="color-dot white"></div>
+                                            <div class="color-dot red"></div>
+                                            <div class="color-dot light-brown"></div>
+                                            <div class="color-dot dark-brown"></div>
+                                            <div class="color-dot blue-gray"></div>
+                                            <div class="color-dot black"></div>
+                                        </div>
+                                    </div>
+                                    <div class="score-details">
+                                        <p>Colors: <span>1-6</span></p>
+                                        <p>Weight: <span>×0.5</span></p>
+                                    </div>
+                                </div>
+                                <div class="score-card" id="diameterCard">
+                                    <div class="score-header">
+                                        <h3>Diameter</h3>
+                                        <div class="score-value" id="diameterScore">-<span>mm</span></div>
+                                    </div>
+                                    <div class="score-visual">
+                                        <div class="diameter-visual">
+                                            <div class="circle-mask"></div>
+                                            <div class="measure-line"></div>
+                                        </div>
+                                    </div>
+                                    <div class="score-details">
+                                        <p>Measurement</p>
+                                        <p>Weight: <span>×0.5</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tds-result glass-card">
+                            <div class="section-header">
+                                <h2>Total Dermoscopy Score</h2>
+                                <div class="tds-value" id="tdsScore">-</div>
+                            </div>
+                            <div class="interpretation-container">
+                                <div class="interpretation" id="interpretationText">
+                                    Upload an image to begin analysis
+                                </div>
+                                <div class="tds-scale">
+                                    <div class="scale-range benign">
+                                        <div class="scale-label">Benign</div>
+                                        <div class="scale-value">&lt; 4.75</div>
+                                        <div class="scale-bar"></div>
+                                    </div>
+                                    <div class="scale-range suspicious">
+                                        <div class="scale-label">Suspicious</div>
+                                        <div class="scale-value">4.76-5.45</div>
+                                        <div class="scale-bar"></div>
+                                    </div>
+                                    <div class="scale-range malignant">
+                                        <div class="scale-label">Malignant</div>
+                                        <div class="scale-value">&gt; 5.45</div>
+                                        <div class="scale-bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tds-chart-container">
+                                <canvas id="tdsChart"></canvas>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="logo-small">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12,2L4,12L12,22L20,12L12,2M12,4L18,12L12,20L6,12L12,4Z" />
+                        </svg>
+                        <span>DermaScan AI</span>
+                    </div>
+                    <p>Academic Research Project - Dermatoscopic Analysis System</p>
+                </div>
+                <div class="footer-disclaimer">
+                    <p>This tool is for educational purposes only. Not for clinical diagnosis.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ABCD Rule Modal -->
+    <div class="modal-overlay" id="abcdModal">
+        <div class="modal-container glass-card">
+            <div class="modal-header">
+                <h3>ABCD Rule of Dermoscopy</h3>
+                <button class="modal-close" id="closeModalBtn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="rule-section">
+                    <h4>Asymmetry (Score 0-2)</h4>
+                    <p>Lesion is bisected by two perpendicular axes. Score 0 if symmetric in both axes, 1 if asymmetric in one axis, 2 if asymmetric in both axes.</p>
+                    <div class="rule-visual">
+                        <div class="asymmetry-demo">
+                            <div class="demo-axis">
+                                <div class="axis-line"></div>
+                                <div class="symmetric-shape"></div>
+                                <div class="symmetric-shape"></div>
+                            </div>
+                            <div class="demo-label">Score 0</div>
+                        </div>
+                        <div class="asymmetry-demo">
+                            <div class="demo-axis">
+                                <div class="axis-line"></div>
+                                <div class="asymmetric-shape"></div>
+                                <div class="symmetric-shape"></div>
+                            </div>
+                            <div class="demo-label">Score 1</div>
+                        </div>
+                        <div class="asymmetry-demo">
+                            <div class="demo-axis rotated">
+                                <div class="axis-line"></div>
+                                <div class="asymmetric-shape"></div>
+                                <div class="asymmetric-shape alt"></div>
+                            </div>
+                            <div class="demo-label">Score 2</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="rule-section">
+                    <h4>Border (Score 0-8)</h4>
+                    <p>Lesion is divided into 8 segments. Each segment with abrupt pigment cutoff scores 1 point.</p>
+                    <div class="rule-visual">
+                        <div class="border-demo">
+                            <div class="border-circle">
+                                <div class="segment" v-for="i in 8"></div>
+                            </div>
+                            <div class="demo-label">0-8 abrupt segments</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="rule-section">
+                    <h4>Color (Score 1-6)</h4>
+                    <p>1 point for each present color: white, red, light brown, dark brown, blue-gray, black.</p>
+                    <div class="rule-visual">
+                        <div class="color-demo">
+                            <div class="color-sample white"></div>
+                            <div class="color-sample red"></div>
+                            <div class="color-sample light-brown"></div>
+                            <div class="color-sample dark-brown"></div>
+                            <div class="color-sample blue-gray"></div>
+                            <div class="color-sample black"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="rule-section">
+                    <h4>Diameter</h4>
+                    <p>Measured in millimeters. Critical threshold at 5mm diameter.</p>
+                </div>
+                
+                <div class="rule-section">
+                    <h4>TDS Calculation</h4>
+                    <p>TDS = (Asymmetry × 1.3) + (Border × 0.1) + (Color × 0.5) + (Diameter × 0.5)</p>
+                    <div class="interpretation-guide">
+                        <div class="interpretation-item">
+                            <div class="indicator benign"></div>
+                            <div class="interpretation-text">
+                                <strong>Benign:</strong> TDS &lt; 4.75
+                            </div>
+                        </div>
+                        <div class="interpretation-item">
+                            <div class="indicator suspicious"></div>
+                            <div class="interpretation-text">
+                                <strong>Suspicious:</strong> TDS 4.76-5.45
+                            </div>
+                        </div>
+                        <div class="interpretation-item">
+                            <div class="indicator malignant"></div>
+                            <div class="interpretation-text">
+                                <strong>Malignant:</strong> TDS &gt; 5.45
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../static/JS/app.js"></script>
+</body>
+</html>
