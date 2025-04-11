@@ -26,7 +26,7 @@ Replace the title with your project title, and **add a snappy acronym that peopl
 
 ## Video/demo/GIF
 Watch a quick overview of how DSAI works:  
-🔗 [**Watch on YouTube**](https://www.youtube.com/watch?v=fgDxsfhXXvQ)
+ [**Watch on YouTube**](https://www.youtube.com/watch?v=fgDxsfhXXvQ)
 
 ## Table of Contents
 
