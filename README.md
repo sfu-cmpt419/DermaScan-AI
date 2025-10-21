@@ -8,9 +8,7 @@ A deeplearning model to segment the skin lesions and predict ABCD values from th
 # Test Output 
 <img width="425" height="563" alt="Screenshot 2025-10-20 at 6 20 29 PM" src="https://github.com/user-attachments/assets/98b8ddd7-3383-4b69-8a94-88f1ddb9395c" />
 
-
-
-### Bayesian Optimization - Optuna Hyperparameter Tuning 
+## Bayesian Optimization - Optuna Hyperparameter Tuning 
 
 <img width="457" height="308" alt="Screenshot 2025-10-20 at 6 20 38 PM" src="https://github.com/user-attachments/assets/e0603042-da33-477c-9e64-666fe34e1f3c" />
 
