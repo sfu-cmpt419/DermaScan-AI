@@ -15,11 +15,11 @@ A deeplearning model to segment the skin lesions and predict ABCD values from th
 
 # Members
 
-- Armaan Singh Chahal; 301559489
-- Harry Gabbi; 301575215
-- Ekamleen Maan; 301555970
-- Md Rownak Abtahee Diganta; 301539632
-- Henrik Sachdeva; 301563572
+- Armaan Singh Chahal; 301559489 [ Frontend, ABCD values ]
+- Harry Gabbi; 301575215 [ Frontend, ABCD values ]
+- Ekamleen Maan; 301555970  [ Data, Model Development, Training, Hyperparameter Tuning ]
+- Md Rownak Abtahee Diganta; 301539632 [ Training, Hyperparameter Tuning ] 
+- Henrik Sachdeva; 301563572 [ Report ]
 
 ## Important Links
 
