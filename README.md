@@ -2,10 +2,10 @@
 
 A deeplearning model to segment the skin lesions and predict ABCD values from that lesion's segmented mask
 
-# Results []
-
+# Results 
 <img width="453" height="124" alt="Screenshot 2025-10-20 at 6 26 11 PM" src="https://github.com/user-attachments/assets/d49d427b-70f1-49b3-aea0-5671e2b09cc1" />
 
+# Test Output 
 <img width="425" height="563" alt="Screenshot 2025-10-20 at 6 20 29 PM" src="https://github.com/user-attachments/assets/98b8ddd7-3383-4b69-8a94-88f1ddb9395c" />
 
 
